@@ -1,28 +1,28 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.http import response
-
-from django.views.generic import ListView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from .serializers import SensorSerializer
+from .serializers import SensorSerializer, EventSerializer
 from .models import Sensor, Event
 
 
 @api_view(['GET'])
 def apiOverview(request):
-    api_urls = {
-        'List: /sensor-list/',
-        'Create: /sensor-detail/<str:pk>',
-        'Update: /sensor-update/<str:pk>',
-        'Delete: /sensor-delete/<str:pk>',
+    api_sensor_urls = {
+        'List sensor: /sensor-list/',
+        'Create sensor: /sensor-detail/<str:pk>',
+        'Update sensor: /sensor-update/<str:pk>',
+        'Delete sensor: /sensor-delete/<str:pk>',
     }
-    return Response(api_urls)
+    api_event_urls = {
+        'List event: /event-list/',
+        'Create event: /event-detail/<str:pk>',
+        'Update event: /event-update/<str:pk>',
+        'Delete event: /event-delete/<str:pk>',
+    }
+    return Response([api_sensor_urls, api_event_urls])
 
+# _____________ SENSOR CRUD ________________
 
 @api_view(['GET'])
 def sensorList(request):
@@ -77,6 +77,64 @@ def sensorDelete(request, pk):
         sensor = Sensor.objects.get(id=pk)
         sensor.delete()
         return Response('Successfuly deleted!')
+
+
+# ___________EVENT CRUD ______________
+
+@api_view(['GET'])
+def eventList(request):
+    events = Event.objects.all()
+    serializer = EventSerializer(events, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def eventDetail(request, pk):
+    event = Event.objects.get(id=pk)
+    serializer = EventSerializer(event, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['POST', 'GET'])
+def eventCreate(request):
+    serializer = EventSerializer(data=request.data)
+    if request.method == 'GET':
+        return Response('Create an event')
+    if request.method == 'POST':
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT', 'GET'])
+def eventUpdate(request, pk):
+    event = Event.objects.get(id=pk)
+    serializer = EventSerializer(instance=event, data=request.data)
+    if request.method == 'GET':
+        event = Event.objects.get(id=pk)
+        serializer = EventSerializer(event, many=False)
+        return Response(serializer.data)
+    if request.method == 'PUT':
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE', 'GET'])
+def eventDelete(request, pk):
+    if request.method == 'GET':
+        event = Event.objects.get(id=pk)
+        serializer = EventSerializer(event, many=False)
+        return Response(serializer.data)
+    if request.method == 'DELETE':
+        event = Event.objects.get(id=pk)
+        event.delete()
+        return Response('Successfuly deleted!')
+
 
 # class SensorListView(ListView):
 #     model = Sensor
