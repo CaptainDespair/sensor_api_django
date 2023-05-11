@@ -10,5 +10,3 @@ Pipfile.lock
 
 # Django 
 sensors_api/sensors/migrations/
-!**/migrations
-!**/migrations/__init__.py
