@@ -51,7 +51,7 @@ def sensorCreate(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PUT', 'GET'])
+@api_view(['PUT', 'PATCH', 'GET'])
 def sensorUpdate(request, pk):
     sensor = Sensor.objects.get(id=pk)
     serializer = SensorSerializer(instance=sensor, data=request.data)
@@ -65,7 +65,14 @@ def sensorUpdate(request, pk):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    if request.method == 'PATCH':
+        serializer = SensorSerializer(instance=sensor, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+    
 
 @api_view(['DELETE', 'GET'])
 def sensorDelete(request, pk):
@@ -108,7 +115,7 @@ def eventCreate(request):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PUT', 'GET'])
+@api_view(['PUT', 'PATCH', 'GET'])
 def eventUpdate(request, pk):
     event = Event.objects.get(id=pk)
     serializer = EventSerializer(instance=event, data=request.data)
@@ -122,6 +129,13 @@ def eventUpdate(request, pk):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'PATCH':
+        serializer = EventSerializer(instance=event, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 
 @api_view(['DELETE', 'GET'])
