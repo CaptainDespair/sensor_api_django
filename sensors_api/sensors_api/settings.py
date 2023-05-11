@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+
+from rest_framework.pagination import LimitOffsetPagination
+
 import os
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')

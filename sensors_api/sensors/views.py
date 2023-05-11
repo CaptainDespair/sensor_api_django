@@ -1,6 +1,7 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.pagination import PageNumberPagination
 
 from .serializers import SensorSerializer, EventSerializer
 from .models import Sensor, Event
@@ -90,9 +91,12 @@ def sensorDelete(request, pk):
 
 @api_view(['GET'])
 def eventList(request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 5
     events = Event.objects.all()
-    serializer = EventSerializer(events, many=True)
-    return Response(serializer.data)
+    result = paginator.paginate_queryset(events, request)
+    serializer = EventSerializer(result, many=True)
+    return paginator.get_paginated_response(serializer.data)
 
 
 @api_view(['GET'])
@@ -148,6 +152,13 @@ def eventDelete(request, pk):
         event = Event.objects.get(id=pk)
         event.delete()
         return Response('Successfuly deleted!')
+    
+
+@api_view(['GET'])
+def getEventListFromSensor(request, pk):
+    events = Event.objects.filter(sensor_id=pk)
+    serializer = EventSerializer(events, many=True)
+    return Response(serializer.data)
 
 
 # class SensorListView(ListView):
