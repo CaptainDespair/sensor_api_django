@@ -19,10 +19,9 @@ class Sensor(models.Model):
         ]
     )
 
-    def __init__(self, name, type):
-        self.name = name
-        self.type = type
-
+    def __str__(self):
+        return self.name
+    
     def __repr__(self):
         return f'<Sensor {self.name}>'
 
@@ -34,26 +33,19 @@ class Event(models.Model):
     )
 
     sensor_id = models.ForeignKey(
-        Sensor, on_delete=models.CASCADE
+        Sensor, on_delete=models.CASCADE, related_name='events'
     )
 
     name = models.CharField(
         max_length=255,
     )
 
-    temperature = models.IntegerField(
-        max_length=255,
-    )
+    temperature = models.IntegerField()
 
-    humidity = models.IntegerField(
-        max_length=255,
-    )
+    humidity = models.IntegerField()
 
-    def __init__(self, sensor_id, name, temperature, humidity):
-        self.sensor_id = sensor_id
-        self.name = name
-        self.temperature = temperature
-        self.humidity = humidity
+    def __str__(self):
+        return self.name
 
     def __repr__(self):
         return f'<Event {self.name}>'
