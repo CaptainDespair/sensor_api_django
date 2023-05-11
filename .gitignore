@@ -1,0 +1,14 @@
+# Pipenv
+Pipfile
+Pipfile.lock
+
+# Linters, format
+.vscode
+
+# Env variables
+.env
+
+# Django 
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
