@@ -14,6 +14,7 @@ from json import JSONDecodeError
 
 @api_view(['GET'])
 def apiOverview(request):
+    '''API OVERVIEW WITH URLS'''
     api_sensor_urls = {
         'List sensor: /sensor-list/',
         'Create sensor: /sensor-detail/<str:pk>',
@@ -35,6 +36,7 @@ def apiOverview(request):
 # _____________ SENSOR _______________
 @api_view(['GET'])
 def sensorList(request):
+    '''Overview all sensors'''
     sensors = Sensor.objects.all()
     serializer = SensorSerializer(sensors, many=True)
     return Response(serializer.data)
@@ -42,6 +44,7 @@ def sensorList(request):
 
 @api_view(['GET'])
 def sensorDetail(request, pk):
+    '''Overview sensor with <id>'''
     try:
         sensor = Sensor.objects.get(id=pk)
     except Sensor.DoesNotExist:
@@ -52,6 +55,7 @@ def sensorDetail(request, pk):
 
 @api_view(['POST', 'GET'])
 def sensorCreate(request):
+    '''Create sensor'''
     serializer = SensorSerializer(data=request.data)
     if request.method == 'GET':
         return Response('Create a sensor')
@@ -67,6 +71,7 @@ def sensorCreate(request):
 
 @api_view(['PUT', 'PATCH', 'GET'])
 def sensorUpdate(request, pk):
+    '''Update sensor'''
     try:
         sensor = Sensor.objects.get(id=pk)
     except Sensor.DoesNotExist:
@@ -100,6 +105,7 @@ def sensorUpdate(request, pk):
 
 @api_view(['DELETE', 'GET'])
 def sensorDelete(request, pk):
+    '''Delete sensor'''
     try: 
         sensor = Sensor.objects.get(id=pk)
     except Sensor.DoesNotExist:
@@ -119,6 +125,7 @@ def sensorDelete(request, pk):
 # ___________EVENT______________
 @api_view(['GET'])
 def eventList(request):
+    '''Overview events with pagination and filters'''
     events = Event.objects.all()
 
     # pagination pages
@@ -136,6 +143,7 @@ def eventList(request):
 
 @api_view(['GET'])
 def eventDetail(request, pk):
+    '''Overview event with <id>'''
     try:
         event = Event.objects.get(id=pk)
     except Event.DoesNotExist:
@@ -146,6 +154,7 @@ def eventDetail(request, pk):
 
 @api_view(['POST', 'GET'])
 def eventCreate(request):
+    '''Create event'''
     serializer = EventSerializer(data=request.data)
     if request.method == 'GET':
         return Response('Create an event')
@@ -161,6 +170,7 @@ def eventCreate(request):
 
 @api_view(['PUT', 'PATCH', 'GET'])
 def eventUpdate(request, pk):
+    '''Update event'''
     try:
         event = Event.objects.get(id=pk)
     except Event.DoesNotExist:
@@ -194,6 +204,7 @@ def eventUpdate(request, pk):
 
 @api_view(['DELETE', 'GET'])
 def eventDelete(request, pk):
+    '''Delete event'''
     try:
         event = Event.objects.get(id=pk)
     except Event.DoesNotExist:
@@ -210,6 +221,7 @@ def eventDelete(request, pk):
 
 @api_view(['GET'])
 def getEventListFromSensor(request, pk):
+    '''Get all events from Sensor <id>'''
     try:
         events = Event.objects.filter(sensor_id=pk)
     except Sensor.DoesNotExist:
@@ -220,6 +232,7 @@ def getEventListFromSensor(request, pk):
 
 @api_view(['POST', 'GET'])
 def uploadJsonEvents(request):
+    '''Upload *.json files for events '''
     try:
         data = readJsonEvents()
         data_success = []
