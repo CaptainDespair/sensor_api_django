@@ -56,21 +56,21 @@ Django web application (DRF)
 
         
 # .env
-#Django 
+        #Django 
+        DJANGO_SECRET_KEY='<django_key>'
+        DEBUG=1
+        DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
 
-DJANGO_SECRET_KEY='<django_key>'
-
-#PostgreSQL
-
-NAME_DB='sensors_db'
-
-POSTGRES_USER='postgres'
-
-POSTGRES_PASSWORD='your_password'
-  
-POSTGRES_HOST='db'
-  
-POSTGRES_PORT='5432'
+        #PostgreSQL
+        DB_ENGINE='django.db.backends.postgresql_psycopg2'
+        NAME_DB='sensors_db'
+        POSTGRES_USER='postgres'
+        POSTGRES_PASSWORD='your_password'
+        POSTGRES_HOST='db'
+        POSTGRES_PORT='5432'
+        
+        #Json dir
+        UPLOAD_FILE = 'events-json/events.json'
 
 # Запуск приложения
 1) Сначала вы должны создать в PostgreSQL базу данных с именем sensors_db или любое, в таком случае изменив NAME_DB в .env
