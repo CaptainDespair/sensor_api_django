@@ -21,10 +21,10 @@ Django web application (DRF)
   - Выгрузка данных событий из JSON-файла в базу данных (если файл не *.JSON, либо поля не соответствуют, либо sensor_id не существует, запись события не произойдет);
   
   - Swagger/Redoc;
+
+  - Dockerfile, docker-compose;
   
 <h3>В разработке</h3>
-
- - Docker
  
  - Linter
 
@@ -32,22 +32,27 @@ Django web application (DRF)
 
  - TESTs
 
-<h2>API_OverView</h2>
+<h2>Обзор АПИ</h2>
 
-        "Delete sensor: /sensor-delete/<str:pk>",
-        "List sensor: /sensor-list/",
-        "Create sensor: /sensor-detail/<str:pk>",
-        "Get sensor events: /sensor-events/<str:pk>",
-        "Update sensor: /sensor-update/<str:pk>"
+<b><i>Апи для датчиков:</i></b>
 
-        "List event: /event-list/",
-        "Upload *.json events: /event-upload/",
-        "Create event: /event-detail/<str:pk>",
-        "Filter event: /event-list/?humidity_min=*&&temperature_value=*&&...etc",
-        "Update event: /event-update/<str:pk>",
-        "Delete event: /event-delete/<str:pk>",
-        "View swagger: /swagger",
-        "View redoc: /redoc"
+        Удаление датчика: /sensor-delete/<str:pk>,
+        Список датчиков: /sensor-list/,
+        Создать датчик: /sensor-detail/<str:pk>,
+        Получить события по датчику: /sensor-events/<str:pk>,
+        Обновить датчик: /sensor-update/<str:pk>
+        
+<b><i>Апи для событий:</i></b>
+
+        Список событий: /event-list/,
+        Загрузка событий из json-файлов: /event-upload/,
+        Создать событие: /event-detail/<str:pk>,
+        Фильтрация событий: (example) humidity_min/max=? : /event-list/?humidity_min=*&&temperature_value=*&&...etc,
+        view: temperature_value=?, temperature_min/max=?, humidity_value=?, humidity_min/max=?
+        Обновить событие: /event-update/<str:pk>,
+        Удалить событий: /event-delete/<str:pk>,
+        Swagger: /swagger,
+        Redoc: /redoc
 
         
 # .env
@@ -61,9 +66,9 @@ NAME_DB='sensors_db'
 
 POSTGRES_USER='postgres'
 
-POSTGRES_PASSWORD=<password>
+POSTGRES_PASSWORD='your_password'
   
-POSTGRES_HOST='127.0.0.1'
+POSTGRES_HOST='db'
   
 POSTGRES_PORT='5432'
 
@@ -74,6 +79,14 @@ POSTGRES_PORT='5432'
 4) >python manage.py makemigrations
 5) >python manage.py migrate
 6) >python manage.py runserver
+
+# Запуск с помощью Docker
+1) Создайте базу данных sensors_db в pgsql
+2) .env - поставить свои настройки
+3) >docker-compose up -d --build #билд сервиса
+4) >docker-compose exec web python manage.py migrate --noinput #запуск миграций
+5) >dicker-compose up #запускаем приложение
+  
   
  # Стек
 - Python3.11
@@ -81,4 +94,6 @@ POSTGRES_PORT='5432'
   - Django Rest Framework
   - psycopg2
   - json
+  - yasg (Swagger)
 - Postgres
+- Docker
