@@ -35,23 +35,23 @@ Django web application (DRF)
 <h2>Обзор АПИ</h2>
 
 <b><i>Апи для датчиков:</i></b>
-
-        Удаление датчика: /sensor-delete/<str:pk>,
-        Список датчиков: /sensor-list/,
-        Создать датчик: /sensor-detail/<str:pk>,
-        Получить события по датчику: /sensor-events/<str:pk>,
+         
+        Список датчиков: /sensor-list/
+        Создать датчик: /sensor-detail/<str:pk>
         Обновить датчик: /sensor-update/<str:pk>
-        
+        Удаление датчика: /sensor-delete/<str:pk>
+        Получить события по датчику: /sensor-events/<str:pk>
+      
 <b><i>Апи для событий:</i></b>
 
-        Список событий: /event-list/,
-        Загрузка событий из json-файлов: /event-upload/,
-        Создать событие: /event-detail/<str:pk>,
-        Фильтрация событий: (example) humidity_min/max=? : /event-list/?humidity_min=*&&temperature_value=*&&...etc,
+        Список событий: /event-list/
+        Фильтрация событий: (example) humidity_min/max=? : /event-list/?humidity_min=*&&temperature_value=*&&...etc
         view: temperature_value=?, temperature_min/max=?, humidity_value=?, humidity_min/max=?
-        Обновить событие: /event-update/<str:pk>,
-        Удалить событий: /event-delete/<str:pk>,
-        Swagger: /swagger,
+        Создать событие: /event-detail/<str:pk>
+        Обновить событие: /event-update/<str:pk>
+        Удалить событие: /event-delete/<str:pk>
+        Загрузка событий из json-файлов: /event-upload/
+        Swagger: /swagger
         Redoc: /redoc
 
         
