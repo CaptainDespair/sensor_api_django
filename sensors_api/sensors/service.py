@@ -1,5 +1,8 @@
 from django_filters import rest_framework as filter
 from sensors.models import Event
+from sensors_api.settings import UPLOAD_FILE
+
+import json
 
 
 class EventFilter(filter.FilterSet):
@@ -11,7 +14,13 @@ class EventFilter(filter.FilterSet):
 
     class Meta:
         model = Event
-        fields = ['temperature', 
+        fields = ['temperature',
                   'humidity',
                   'temperature_value',
                   'humidity_value']
+
+
+def readJsonEvents():
+    with open(UPLOAD_FILE) as f:
+        data = json.load(f)
+    return data

@@ -13,5 +13,6 @@ urlpatterns = [
     path('event-create/', views.eventCreate, name='event-create'),
     path('event-update/<str:pk>', views.eventUpdate, name='event-update'),
     path('event-delete/<str:pk>', views.eventDelete, name='event-delete'),
-    path('sensor-events/<str:pk>', views.getEventListFromSensor, name='sensor-events')
+    path('sensor-events/<str:pk>', views.getEventListFromSensor, name='sensor-events'),
+    path('event-upload/', views.uploadJsonEvents, name='event-upload')
 ]

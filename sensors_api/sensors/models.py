@@ -40,9 +40,9 @@ class Event(models.Model):
         max_length=255,
     )
 
-    temperature = models.IntegerField()
+    temperature = models.IntegerField(null=True)
 
-    humidity = models.IntegerField()
+    humidity = models.IntegerField(null=True)
 
     def __str__(self):
         return self.name

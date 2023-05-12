@@ -4,8 +4,11 @@ from rest_framework.decorators import api_view
 from rest_framework.pagination import PageNumberPagination
 
 from .models import Sensor, Event
-from .service import EventFilter
+from .service import EventFilter, readJsonEvents
 from .serializers import SensorSerializer, EventSerializer
+from sensors_api.settings import UPLOAD_FILE
+
+from json import JSONDecodeError
 
 
 @api_view(['GET'])
@@ -15,13 +18,14 @@ def apiOverview(request):
         'Create sensor: /sensor-detail/<str:pk>',
         'Update sensor: /sensor-update/<str:pk>',
         'Delete sensor: /sensor-delete/<str:pk>',
+        'Get sensor events: /sensor-events/<str:pk>',
     }
     api_event_urls = {
         'List event: /event-list/',
         'Create event: /event-detail/<str:pk>',
         'Update event: /event-update/<str:pk>',
         'Delete event: /event-delete/<str:pk>',
-        'Filter event: /event-list/?humidity_min=*&&temperature_value=*&&...etc'
+        'Filter event: /event-list/?humidity_min=*&&temperature_value=*&&...etc',
     }
     return Response([api_sensor_urls, api_event_urls])
 
@@ -148,7 +152,7 @@ def eventUpdate(request, pk):
                                  data=request.data)
     if request.method == 'GET':
         event = Event.objects.get(id=pk)
-        serializer = EventSerializer(event,many=False)
+        serializer = EventSerializer(event, many=False)
         return Response(serializer.data)
     if request.method == 'PUT':
         if serializer.is_valid():
@@ -159,8 +163,8 @@ def eventUpdate(request, pk):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'PATCH':
-        serializer = EventSerializer(instance=event, 
-                                     data=request.data, 
+        serializer = EventSerializer(instance=event,
+                                     data=request.data,
                                      partial=True)
         if serializer.is_valid():
             serializer.save()
@@ -188,3 +192,26 @@ def getEventListFromSensor(request, pk):
     events = Event.objects.filter(sensor_id=pk)
     serializer = EventSerializer(events, many=True)
     return Response(serializer.data)
+
+
+@api_view(['POST', 'GET'])
+def uploadJsonEvents(request):
+    try:
+        data = readJsonEvents()
+        data_success = []
+        data_fail = []
+        if request.method == 'GET':
+            return Response(f'Upload {UPLOAD_FILE}')
+        for frame in data:
+            serializer = EventSerializer(data=[frame], many=True)
+            if request.method == 'POST':
+                if serializer.is_valid():
+                    serializer.save()
+                    data_success += [frame]
+                else:
+                    data_fail += [frame]
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(f'Success: {data_success} Failed: {data_fail}')
+    except (JSONDecodeError):
+        return Response('Json file is damaged')
