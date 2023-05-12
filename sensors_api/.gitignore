@@ -9,4 +9,4 @@ Pipfile.lock
 .env
 
 # Django 
-sensors_api/sensors/migrations/
+sensors/migrations/
