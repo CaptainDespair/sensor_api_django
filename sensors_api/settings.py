@@ -21,9 +21,8 @@ if os.path.exists(dotenv_path):
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-UPLOAD_PATH = 'events-json'
-UPLOAD_FILE = os.path.join(UPLOAD_PATH, 'events.json')
 
+UPLOAD_FILE = os.environ.get('UPLOAD_FILE')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -32,9 +31,9 @@ UPLOAD_FILE = os.path.join(UPLOAD_PATH, 'events.json')
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -89,7 +88,7 @@ WSGI_APPLICATION = 'sensors_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': os.environ.get('DB_ENGINE'),
         'NAME': os.environ.get('NAME_DB'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
