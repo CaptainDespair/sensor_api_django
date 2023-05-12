@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import NotFound
 from rest_framework.pagination import PageNumberPagination
 
 from .models import Sensor, Event
@@ -26,12 +27,12 @@ def apiOverview(request):
         'Update event: /event-update/<str:pk>',
         'Delete event: /event-delete/<str:pk>',
         'Filter event: /event-list/?humidity_min=*&&temperature_value=*&&...etc',
+        'Upload *.json events: /event-upload/',
     }
     return Response([api_sensor_urls, api_event_urls])
 
-# _____________ SENSOR CRUD ________________
 
-
+# _____________ SENSOR _______________
 @api_view(['GET'])
 def sensorList(request):
     sensors = Sensor.objects.all()
@@ -41,7 +42,10 @@ def sensorList(request):
 
 @api_view(['GET'])
 def sensorDetail(request, pk):
-    sensor = Sensor.objects.get(id=pk)
+    try:
+        sensor = Sensor.objects.get(id=pk)
+    except Sensor.DoesNotExist:
+        raise NotFound('Sensor not found')
     serializer = SensorSerializer(sensor, many=False)
     return Response(serializer.data)
 
@@ -55,7 +59,7 @@ def sensorCreate(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,
-                            status=status.HTTP_200_OK)
+                            status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
@@ -63,14 +67,17 @@ def sensorCreate(request):
 
 @api_view(['PUT', 'PATCH', 'GET'])
 def sensorUpdate(request, pk):
-    sensor = Sensor.objects.get(id=pk)
+    try:
+        sensor = Sensor.objects.get(id=pk)
+    except Sensor.DoesNotExist:
+        raise NotFound('Sensor not found')
     serializer = SensorSerializer(instance=sensor,
                                   data=request.data)
     if request.method == 'GET':
-        sensor = Sensor.objects.get(id=pk)
         serializer = SensorSerializer(sensor, many=False)
         return Response(serializer.data)
-    if request.method == 'PUT':
+    elif request.method == 'PUT':
+        serializer = SensorSerializer(instance=sensor, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,
@@ -78,7 +85,7 @@ def sensorUpdate(request, pk):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-    if request.method == 'PATCH':
+    elif request.method == 'PATCH':
         serializer = SensorSerializer(instance=sensor,
                                       data=request.data,
                                       partial=True)
@@ -93,19 +100,23 @@ def sensorUpdate(request, pk):
 
 @api_view(['DELETE', 'GET'])
 def sensorDelete(request, pk):
+    try: 
+        sensor = Sensor.objects.get(id=pk)
+    except Sensor.DoesNotExist:
+        raise NotFound('Sensor not found')
     if request.method == 'GET':
         sensor = Sensor.objects.get(id=pk)
         serializer = SensorSerializer(sensor,
                                       many=False)
         return Response(serializer.data)
-    if request.method == 'DELETE':
+    elif request.method == 'DELETE':
         sensor = Sensor.objects.get(id=pk)
         sensor.delete()
-        return Response('Successfuly deleted!')
+        return Response('Successfuly deleted!',
+                        status=status.HTTP_204_NO_CONTENT)
 
 
-# ___________EVENT CRUD ______________
-
+# ___________EVENT______________
 @api_view(['GET'])
 def eventList(request):
     events = Event.objects.all()
@@ -125,7 +136,10 @@ def eventList(request):
 
 @api_view(['GET'])
 def eventDetail(request, pk):
-    event = Event.objects.get(id=pk)
+    try:
+        event = Event.objects.get(id=pk)
+    except Event.DoesNotExist:
+        raise NotFound('Event not found')
     serializer = EventSerializer(event, many=False)
     return Response(serializer.data)
 
@@ -139,7 +153,7 @@ def eventCreate(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,
-                            status=status.HTTP_200_OK)
+                            status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
@@ -147,14 +161,17 @@ def eventCreate(request):
 
 @api_view(['PUT', 'PATCH', 'GET'])
 def eventUpdate(request, pk):
-    event = Event.objects.get(id=pk)
+    try:
+        event = Event.objects.get(id=pk)
+    except Event.DoesNotExist:
+        raise NotFound('Event not found')
     serializer = EventSerializer(instance=event,
                                  data=request.data)
     if request.method == 'GET':
         event = Event.objects.get(id=pk)
         serializer = EventSerializer(event, many=False)
         return Response(serializer.data)
-    if request.method == 'PUT':
+    elif request.method == 'PUT':
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,
@@ -162,7 +179,7 @@ def eventUpdate(request, pk):
         else:
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
-    if request.method == 'PATCH':
+    elif request.method == 'PATCH':
         serializer = EventSerializer(instance=event,
                                      data=request.data,
                                      partial=True)
@@ -177,19 +194,26 @@ def eventUpdate(request, pk):
 
 @api_view(['DELETE', 'GET'])
 def eventDelete(request, pk):
-    if request.method == 'GET':
+    try:
         event = Event.objects.get(id=pk)
+    except Event.DoesNotExist:
+        raise NotFound('Event not found')
+    if request.method == 'GET':
         serializer = EventSerializer(event, many=False)
         return Response(serializer.data)
     if request.method == 'DELETE':
         event = Event.objects.get(id=pk)
         event.delete()
-        return Response('Successfuly deleted!')
+        return Response('Successfuly deleted!',
+                        status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET'])
 def getEventListFromSensor(request, pk):
-    events = Event.objects.filter(sensor_id=pk)
+    try:
+        events = Event.objects.filter(sensor_id=pk)
+    except Sensor.DoesNotExist:
+        raise NotFound('Sensor not found')
     serializer = EventSerializer(events, many=True)
     return Response(serializer.data)
 
@@ -211,7 +235,11 @@ def uploadJsonEvents(request):
                 else:
                     data_fail += [frame]
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response(f'Success: {data_success} Failed: {data_fail}')
-    except (JSONDecodeError):
-        return Response('Json file is damaged')
+                return Response(serializer.errors, 
+                                status=status.HTTP_400_BAD_REQUEST)
+        return Response(f'Success: {data_success}\
+                          Failed: {data_fail},\
+                          ERROR: {serializer.errors}')
+    except (JSONDecodeError, FileNotFoundError):
+        return Response('Json file is damaged or not found', 
+                        status=status.HTTP_400_BAD_REQUEST)

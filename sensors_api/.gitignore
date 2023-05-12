@@ -1,0 +1,12 @@
+# Pipenv
+Pipfile
+Pipfile.lock
+
+# Linters, format
+.vscode
+
+# Env variables
+.env
+
+# Django 
+sensors_api/sensors/migrations/
