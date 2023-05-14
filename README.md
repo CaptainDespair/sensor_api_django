@@ -24,13 +24,15 @@ Django web application (DRF)
 
   - Dockerfile, docker-compose;
   
+  - Тесты на CRUD модели Sensor;
+  
 <h3>В разработке</h3>
  
  - Linter
 
  - CI/CD
 
- - TESTs
+ - TESTs +-
 
 <h2>Обзор АПИ</h2>
 
@@ -76,7 +78,7 @@ Django web application (DRF)
 1) Сначала вы должны создать в PostgreSQL базу данных с именем sensors_db или любое, в таком случае изменив NAME_DB в .env
 2) >pip install -r requirements
 3) .env - поставить свои настройки
-4) >python manage.py makemigrations
+4) >python manage.py makemigrations sensors
 5) >python manage.py migrate
 6) >python manage.py runserver
 
@@ -86,7 +88,13 @@ Django web application (DRF)
 3) >docker-compose up -d --build #билд сервиса
 4) >docker-compose exec sensor_api python manage.py migrate --noinput #запуск миграций
 5) >docker-compose up #запускаем приложение
-  
+
+# Сроки по выполнению
+- 11.05.2023-12.05.2023
+  - API, swagger, docker
+
+- 14.05.2023
+  - docker-compose, tests (CRUD sensors)
   
  # Стек
 - Python3.11
