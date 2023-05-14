@@ -17,16 +17,16 @@ def apiOverview(request):
     '''API OVERVIEW WITH URLS'''
     api_sensor_urls = {
         'List sensor: /sensor-list/',
-        'Create sensor: /sensor-detail/<str:pk>',
-        'Update sensor: /sensor-update/<str:pk>',
-        'Delete sensor: /sensor-delete/<str:pk>',
-        'Get sensor events: /sensor-events/<str:pk>',
+        'Create sensor: /sensor-detail/<int:pk>',
+        'Update sensor: /sensor-update/<int:pk>',
+        'Delete sensor: /sensor-delete/<int:pk>',
+        'Get sensor events: /sensor-events/<int:pk>',
     }
     api_event_urls = {
         'List event: /event-list/',
-        'Create event: /event-detail/<str:pk>',
-        'Update event: /event-update/<str:pk>',
-        'Delete event: /event-delete/<str:pk>',
+        'Create event: /event-detail/<int:pk>',
+        'Update event: /event-update/<int:pk>',
+        'Delete event: /event-delete/<int:pk>',
         'Filter event: /event-list/?humidity_min=*&&temperature_value=*&&...etc',
         'Upload *.json events: /event-upload/',
     }
