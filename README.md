@@ -65,7 +65,7 @@ Django web application (DRF)
 
         #PostgreSQL
         DB_ENGINE='django.db.backends.postgresql_psycopg2'
-        NAME_DB='sensors_db'
+        POSTGRES_DB='sensors_db'
         POSTGRES_USER='postgres'
         POSTGRES_PASSWORD='your_password'
         POSTGRES_HOST='db'
@@ -75,7 +75,7 @@ Django web application (DRF)
         UPLOAD_FILE = 'events-json/events.json'
 
 # Запуск приложения
-1) Сначала вы должны создать в PostgreSQL базу данных с именем sensors_db или любое, в таком случае изменив NAME_DB в .env
+1) Сначала вы должны создать в PostgreSQL базу данных с именем sensors_db или любое, в таком случае изменив POSTGRES_DB в .env
 2) >pip install -r requirements
 3) .env - поставить свои настройки
 4) >python manage.py makemigrations sensors
