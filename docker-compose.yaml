@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  web:
+  sensor_api:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
@@ -17,12 +17,10 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER : postgres
-      - POSTGRES_PASSWORD : 1234
-      - POSTGRES_DB : sensors_db
-      - POSTGRES_HOST: db
-    ports:
-    - "${POSTGRES_PORT:-5432}:5432"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=sensor_db
+
 
 volumes:
   postgres_data:

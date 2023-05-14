@@ -82,10 +82,10 @@ Django web application (DRF)
 
 # Запуск с помощью Docker
 1) Создайте базу данных sensors_db в pgsql
-2) .env - поставить свои настройки
+2) .env - поставить свои настройки, <b><i>POSTGRES_HOST='db'</i></i> - обязательно, чтобы приложение подключилось к бд, которая запущена в контейнере с именем "db"
 3) >docker-compose up -d --build #билд сервиса
-4) >docker-compose exec web python manage.py migrate --noinput #запуск миграций
-5) >dicker-compose up #запускаем приложение
+4) >docker-compose exec sensor_api python manage.py migrate --noinput #запуск миграций
+5) >docker-compose up #запускаем приложение
   
   
  # Стек
