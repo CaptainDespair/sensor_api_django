@@ -54,9 +54,10 @@ Django web application (DRF)
 <b><i>Апи для датчиков:</i></b>
          
         Список датчиков: /sensor-list/
-        Создать датчик: /sensor-detail/<int:pk>
+        Подробности датчика: /sensor-detail/<int:pk>
+        Создать датчик: /sensor-create/
         Обновить датчик: /sensor-update/<int:pk>
-        Удаление датчика: /sensor-delete/<int:pk>
+        Удалить датчик: /sensor-delete/<int:pk>
         Получить события по датчику: /sensor-events/<int:pk>
       
 <b><i>Апи для событий:</i></b>
@@ -64,7 +65,8 @@ Django web application (DRF)
         Список событий: /event-list/
         Фильтрация событий: (example) humidity_min/max=? : /event-list/?humidity_min=*&&temperature_value=*&&...etc
         view: temperature_value=?, temperature_min/max=?, humidity_value=?, humidity_min/max=?
-        Создать событие: /event-detail/<int:pk>
+        Подробности события: /event-detail/<int:pk>
+        Создать событие: /event-create/ (поле sensor_id должно содержать существующий id датчика)
         Обновить событие: /event-update/<int:pk>
         Удалить событие: /event-delete/<int:pk>
         Загрузка событий из json-файлов: /event-upload/
